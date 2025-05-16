@@ -1,0 +1,424 @@
+---
+title: "MATH 208 Final Death"
+output: html_document
+date: "2025-04-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(tidyverse)
+library(splines)
+```
+
+
+```{r pressure, echo=FALSE}
+cyber_data <- read.csv("C:\\Users\\prdji\\OneDrive\\Documents\\Modelling and Simulation\\DataBreaches-Kaggle\\df_1.csv")
+cyber_data <- cyber_data %>% 
+  rename_at('Organization.type', ~ 'Organization')
+cyber_data <- cyber_data |>
+  mutate(Organization = fct_lump_lowfreq(Organization)) |>
+  mutate(Organization = fct_lump_n(Organization, 5)) |>
+  mutate(Year = as.numeric(cyber_data$Year)) |>
+  mutate(Records = as.numeric(cyber_data$Records)) |> 
+  mutate(Method = as.factor(cyber_data$Method))
+cyber_data <- cyber_data |>
+  mutate(Method = fct_lump_n(Method, 5))
+cyber_data <- na.omit(cyber_data)
+summary(cyber_data)
+```
+
+```{r}
+plot(cyber_data$Year, cyber_data$Records, xlab = "Years", ylab = "Number of Records Stolen")
+abline(h = 0, v = 0)
+title("Plot of All Cybersecurity Incidents by Year")
+max(cyber_data$Records)
+```
+
+
+```{r}
+no_out <- subset(cyber_data, Records < 3000000000)
+ggplot(no_out, aes(x = no_out$Year, y = no_out$Records, color = no_out$Organization)) + geom_point() + labs(x = "Year", y = "Records Stolen") + guides(color = guide_legend(title = "Industry")) + ggtitle("Plot of Cybersecurity Incidents by Year Excluding Outliers")
+```
+
+```{r}
+government <- subset(cyber_data, Organization == 'government')
+plot(government$Year, government$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+title("Plot of Cybersecurity Incidents Targeting Governments")
+```
+
+```{r}
+health <- subset(cyber_data, Organization == 'healthcare')
+plot(health$Year, health$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+title("Plot of Cybersecurity Incidents Targeting Healthcare")
+```
+
+```{r}
+web <- subset(cyber_data, Organization == 'web')
+plot(web$Year, web$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+title("Plot of Cybersecurity Incidents Targeting Web Companies")
+```
+
+```{r}
+fin <- subset(cyber_data, Organization == 'financial')
+plot(fin$Year, fin$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+title("Plot of Cybersecurity Incidents Targeting Financial Institutions")
+```
+
+```{r}
+hack <- subset(cyber_data, Method == 'hacked')
+plot(hack$Year, hack$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+title("Plot of Cybersecurity Incidents Where the Method of Attack was Hacking")
+```
+
+```{r}
+security <- subset(cyber_data, Method == 'poor security')
+plot(security$Year, security$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+title("Plot of Cybersecurity Incidents Where the Method of Attack was Poor Security")
+```
+
+```{r}
+stolen <- subset(cyber_data, Method == 'lost / stolen media')
+plot(stolen$Year, stolen$Records, xlab = "Years", ylab = "Records Stolen")
+abline(h=0, v=0)
+title("Plot of Cybersecurity Incidents Where the Method of Attack was Stoeln Records")
+```
+
+
+```{r}
+year1 <- subset(cyber_data, Year == 2004)
+year2 <- subset(cyber_data, Year == 2005)
+year3 <- subset(cyber_data, Year == 2006)
+year4 <- subset(cyber_data, Year == 2007)
+year5 <- subset(cyber_data, Year == 2008)
+year6 <- subset(cyber_data, Year == 2009)
+year7 <- subset(cyber_data, Year == 2010)
+year8 <- subset(cyber_data, Year == 2011)
+year9 <- subset(cyber_data, Year == 2012)
+year10 <- subset(cyber_data, Year == 2013)
+year11 <- subset(cyber_data, Year == 2014)
+year12 <- subset(cyber_data, Year == 2015)
+year13 <- subset(cyber_data, Year == 2016)
+year14 <- subset(cyber_data, Year == 2017)
+year15 <- subset(cyber_data, Year == 2018)
+year16 <- subset(cyber_data, Year == 2019)
+year17 <- subset(cyber_data, Year == 2020)
+year18 <- subset(cyber_data, Year == 2021)
+year19 <- subset(cyber_data, Year == 2022)
+```
+
+```{r}
+avg_y1 <- mean(year1$Records)
+avg_y2 <- mean(year2$Records)
+avg_y3 <- mean(year3$Records)
+avg_y4 <- mean(year4$Records)
+avg_y5 <- mean(year5$Records)
+avg_y6 <- mean(year6$Records)
+avg_y7 <- mean(year7$Records)
+avg_y8 <- mean(year8$Records)
+avg_y9 <- mean(year9$Records)
+avg_y10 <- mean(year10$Records)
+avg_y11 <- mean(year11$Records)
+avg_y12 <- mean(year12$Records)
+avg_y13 <- mean(year13$Records)
+avg_y14 <- mean(year14$Records)
+avg_y15 <- mean(year15$Records)
+avg_y16 <- mean(year16$Records)
+avg_y17 <- mean(year17$Records)
+avg_y18 <- mean(year18$Records)
+avg_y19 <- mean(year19$Records)
+```
+
+```{r}
+averages <- c(avg_y1, avg_y2, avg_y3, avg_y4,avg_y5, avg_y6, avg_y7, avg_y8, avg_y9, avg_y10, avg_y11, avg_y12, avg_y13, avg_y14, avg_y15, avg_y16, avg_y17, avg_y18, avg_y19)
+years <- c(2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022)
+```
+
+```{r}
+plot(years, averages, xlab = "Year", ylab = "Average Records Stolen")
+abline(h=0, v=0)
+title("Plot of Average Records Stolen per Year")
+```
+
+```{r}
+avg_fit <- lm(averages ~ bs(years, knots = c(2013, 2019)))
+summary(avg_fit)
+lm(formula = averages ~ bs(years, knots = c(2013, 2019)))
+x_lim <- range(years)
+x_grid <- seq(x_lim[1], x_lim[2])
+preds <- predict(avg_fit, newdata = list(x = x_grid))
+plot(years, averages, xlab = "Year", ylab = "Average Records Stolen")
+lines(x_grid, preds)
+title("Plot of Average Records Stolen per Year with Spline Regression")
+```
+
+```{r}
+plot(no_out$Year, no_out$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+lines(x_grid, preds, col = 'purple', lwd = 2)
+title("Plot of Records Stolen per Year Excluding Outliers with Spline Regression")
+```
+
+
+```{r}
+plot(government$Year, government$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+lines(x_grid, preds, col = 'purple', lwd = 2)
+title("Plot of Cybersecurity Incidents Involving Government Entities with Spline Regression")
+```
+
+#hippaa, make own model
+```{r}
+plot(health$Year, health$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+lines(x_grid, preds, col = 'purple', lwd = 2)
+title("Plot of Cybersecurity Incidents Invovling Helathcare Entities with Spline Regression")
+```
+
+```{r}
+h1 = subset(health, Year == 2007)
+h2 = subset(health, Year == 2008)
+#2009 = 0
+h3 = subset(health, Year == 2010)
+h4 = subset(health, Year == 2011)
+h5 = subset(health, Year == 2012)
+h6 = subset(health, Year == 2013)
+#2014 = 0
+h7 = subset(health, Year == 2015)
+h8 = subset(health, Year == 2016)
+#2017 = 0
+h9 = subset(health, Year == 2018)
+h10 = subset(health, Year == 2019)
+h11 = subset(health, Year == 2020)
+h12 = subset(health, Year == 2021)
+```
+
+```{r}
+avg_h1 <- mean(h1$Records)
+avg_h2 <- mean(h2$Records)
+avg_h3 <- mean(h3$Records)
+avg_h4 <- mean(h4$Records)
+avg_h5 <- mean(h5$Records)
+avg_h6 <- mean(h6$Records)
+avg_h7 <- mean(h7$Records)
+avg_h8 <- mean(h8$Records)
+avg_h9 <- mean(h9$Records)
+avg_h10 <- mean(h10$Records)
+avg_h11 <- mean(h11$Records)
+avg_h12 <- mean(h12$Records)
+```
+
+```{r}
+health_avg <- c(avg_h1, avg_h2, 0, avg_h3, avg_h4, avg_h5, avg_h6, 0, avg_h7, avg_h8, 0, avg_h9, avg_h10, avg_h11, avg_h12)
+years2 <- c(2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021)
+```
+
+```{r}
+plot(years2, health_avg, xlab = "Year", ylab = "Average Records Stolen")
+abline(h=0, v=0)
+title("Plot of Average Records Stolen from Healthcare Entities by Year")
+```
+
+```{r}
+health_fit <- lm(health_avg ~ bs(years2, knots = c(2012, 2015)))
+summary(health_fit)
+lm(formula = health_avg ~ bs(years2, knots = c(2012, 2015)))
+x_lim2 <- range(years2)
+x_grid2 <- seq(x_lim2[1], x_lim2[2])
+preds2 <- predict(health_fit, newdata = list(x = x_grid2))
+plot(years2, health_avg, xlab = "Year", ylab = "Average Records Stolen")
+lines(x_grid2, preds2)
+title("Plot of Average Records Stolen from Healthcare Entities with Spline Regression")
+```
+
+```{r}
+plot(health$Year, health$Records, xlab = "Year", ylab = "Records Stolen")
+lines(x_grid2, preds2, col = 'purple', lwd = 2)
+abline(h=0, v=0)
+title("Plot of Cybersecurity Incidents Involving Healthcare with Spline Regression")
+```
+
+#web values much lower make own model
+```{r}
+plot(web$Year, web$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+lines(x_grid, preds, col = 'purple', lwd = 2)
+abline(h=0,v=0)
+title("Plot of Cybersecurity Incidents Involving Web Entities with Spline Regression")
+```
+
+```{r}
+w1 = subset(web, Year == 2004)
+#2005 = 0
+w2 = subset(web, Year == 2006)
+w3 = subset(web, Year == 2007)
+w4 = subset(web, Year == 2008)
+#2009 = 0
+w5 = subset(web, Year == 2010)
+w6 = subset(web, Year == 2011)
+w7 = subset(web, Year == 2012)
+w8 = subset(web, Year == 2013)
+w9 = subset(web, Year == 2014)
+w10 = subset(web, Year == 2015)
+w11 = subset(web, Year == 2016)
+w12 = subset(web, Year == 2017)
+w13 = subset(web, Year == 2018)
+w14 = subset(web, Year == 2019)
+w15 = subset(web, Year == 2020)
+w16 = subset(web, Year == 2021)
+```
+
+```{r}
+avg_w1 <- mean(w1$Records)
+avg_w2 <- mean(w2$Records)
+avg_w3 <- mean(w3$Records)
+avg_w4 <- mean(w4$Records)
+avg_w5 <- mean(w5$Records)
+avg_w6 <- mean(w6$Records)
+avg_w7 <- mean(w7$Records)
+avg_w8 <- mean(w8$Records)
+avg_w9 <- mean(w9$Records)
+avg_w10 <- mean(w10$Records)
+avg_w11 <- mean(w11$Records)
+avg_w12 <- mean(w12$Records)
+avg_w13 <- mean(w13$Records)
+avg_w14 <- mean(w14$Records)
+avg_w15 <- mean(w15$Records)
+avg_w16 <- mean(w16$Records)
+```
+
+```{r}
+web_avg <- c(avg_w1, 0, avg_w2, avg_w3, avg_w4, 0, avg_w5, avg_w6, avg_w7, avg_w8, avg_w9, avg_w10, avg_w11, avg_w12, avg_w13, avg_w14, avg_w15, avg_w16)
+years3 <- c(2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021)
+```
+
+```{r}
+plot(years3, web_avg, xlab = "Years", ylab = "Average Records Stolen")
+abline(h=0, v=0)
+title("Plot of Average Records Stolen from Web Entities")
+```
+
+```{r}
+web_fit <- lm(web_avg ~ bs(years3, knots = c(2014, 2018)))
+summary(web_fit)
+lm(formula = web_avg ~ bs(years3, knots = c(2014, 2018)))
+x_lim3 <- range(years3)
+x_grid3 <- seq(x_lim3[1], x_lim3[2])
+preds3 <- predict(web_fit, newdata = list(x = x_grid3))
+plot(years3, web_avg, xlab = "Year", ylab = "Average Records Stolen")
+abline(h=0, v=0)
+lines(x_grid3, preds3)
+title("Plot of Average Records Stolen from Web Incidents with Spline Regression")
+```
+
+```{r}
+plot(web$Year, web$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+lines(x_grid3, preds3, col = 'purple', lwd = 2)
+title("Plot of Cybersecurity Incidents Involving Web Entities with Spline Regression")
+```
+
+#iffy, maybe make own model if time permits
+```{r}
+plot(fin$Year, fin$Records, xlab = "Years", ylab = "Records Stolen")
+abline(h=0, v=0)
+lines(x_grid, preds, col = 'purple', lwd = 2)
+title("Plot of Cybersecurity Incidents Involving Financial Entities with Spline Regression")
+```
+
+```{r}
+f1 = subset(fin, Year == 2005)
+f2 = subset(fin, Year == 2006)
+f3 = subset(fin, Year == 2007)
+f4 = subset(fin, Year == 2008)
+f5 = subset(fin, Year == 2009)
+f6 = subset(fin, Year == 2010)
+f7 = subset(fin, Year == 2011)
+f8 = subset(fin, Year == 2012)
+f9 = subset(fin, Year == 2013)
+f10 = subset(fin, Year == 2014)
+f11 = subset(fin, Year == 2015)
+f12 = subset(fin, Year == 2016)
+f13 = subset(fin, Year == 2017)
+f14 = subset(fin, Year == 2018)
+f15 = subset(fin, Year == 2019)
+f16 = subset(fin, Year == 2020)
+```
+
+```{r}
+avg_f1 <- mean(f1$Records)
+avg_f2 <- mean(f2$Records)
+avg_f3 <- mean(f3$Records)
+avg_f4 <- mean(f4$Records)
+avg_f5 <- mean(f5$Records)
+avg_f6 <- mean(f6$Records)
+avg_f7 <- mean(f7$Records)
+avg_f8 <- mean(f8$Records)
+avg_f9 <- mean(f9$Records)
+avg_f10 <- mean(f10$Records)
+avg_f11 <- mean(f11$Records)
+avg_f12 <- mean(f12$Records)
+avg_f13 <- mean(f13$Records)
+avg_f14 <- mean(f14$Records)
+avg_f15 <- mean(f15$Records)
+avg_f16 <- mean(f16$Records)
+```
+
+```{r}
+years4 <- c(2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020)
+fin_avg <- c(avg_f1, avg_f2, avg_f3, avg_f4, avg_f5, avg_f6, avg_f7, avg_f8, avg_f9, avg_f10, avg_f11, avg_f12, avg_f13, avg_f14, avg_f15, avg_f16)
+```
+
+```{r}
+plot(years4, fin_avg, xlab = "Year", ylab = "Average Records Stolen")
+abline(h=0, v=0)
+title("Plot of Average Records Stolen From Financial Entities")
+```
+
+```{r}
+fin_fit <- lm(fin_avg ~ bs(years4, knots = c(2007, 2015)))
+summary(fin_fit)
+lm(formula = fin_avg ~ bs(years4, knots = c(2007, 2015)))
+x_lim4 <- range(years4)
+x_grid4 <- seq(x_lim4[1], x_lim4[2])
+preds4 <- predict(fin_fit, newdata = list(x = x_grid4))
+plot(years4, fin_avg, xlab = "Year", ylab = "Average Records Stolen")
+abline(h=0, v=0)
+lines(x_grid4, preds4)
+title("Plot of Average Records Stolen From Financial Entities with Spline Regression")
+```
+
+```{r}
+plot(fin$Year, fin$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+lines(x_grid4, preds4, col = 'purple', lwd = 2)
+title("Plot of Cybersecurity Incidents Involving Financial Entities with Spline Regression")
+```
+
+```{r}
+plot(no_out$Year, no_out$Records, xlab = "Year", ylab = "Records Stolen")
+abline(h=0, v=0)
+lines(x_grid, preds, col = 'purple', lwd = 2)
+#health
+lines(x_grid2, preds2, col = 'red', lwd = 2)
+#web
+lines(x_grid3, preds3, col = 'blue', lwd = 2)
+#financial
+lines(x_grid4, preds4, col = 'green', lwd = 2)
+legend(x = "topright", legend = c("All Data", "Healthcare", "Web", "Financial"), col = c('purple', 'red', 'blue', 'green'), lwd = 2)
+
+```
